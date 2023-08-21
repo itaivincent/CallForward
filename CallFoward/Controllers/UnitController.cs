@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using CallFoward.Data;
 using CallFoward.Models;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -40,6 +41,45 @@ namespace CallFoward.Controllers
             try
             {
                 _context.Units.Add(unit);
+                _context.SaveChanges();
+            }
+            catch
+            {
+
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        public IActionResult Details (int id)
+        {
+            Unit unit = GetUnit(id);
+            return View(unit);
+        }
+
+        private Unit GetUnit(int id)
+        {
+            Unit unit = _context.Units.Where(u => u.Id == id).FirstOrDefault();
+            return unit;
+        }
+
+
+
+        public IActionResult Edit(int id)
+        {
+            Unit unit = GetUnit(id);
+            return View(unit);
+        }
+
+
+        [HttpPost]
+        public IActionResult Edit(Unit unit)
+        {
+            try
+            {
+                _context.Units.Attach(unit);
+                _context.Entry(unit).State = EntityState.Modified;
                 _context.SaveChanges();
             }
             catch
