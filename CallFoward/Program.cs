@@ -1,11 +1,15 @@
 ﻿using CallFoward.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using CallFoward.Interfaces;
+using CallFoward.Repositories;
+using CallFoward.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IUnit,UnitRepository>();
 builder.Services.AddDbContext<CallForwardContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConn")));
 
 var app = builder.Build();

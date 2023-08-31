@@ -7,6 +7,7 @@ using CallFoward.Data;
 using CallFoward.Models;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using CallFoward.Interfaces;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,17 +16,16 @@ namespace CallFoward.Controllers
     public class UnitController : Controller
     {
 
-        private readonly CallForwardContext _context;
+        private readonly IUnit _unitRepo;
 
-
-        public UnitController(CallForwardContext context)
-        {
-            _context = context;
+        public UnitController(IUnit unitRepo)
+        {          
+            _unitRepo = unitRepo;
         }
         // GET: /<controller>/
         public IActionResult Index()
         {
-            List<Unit> units = _context.Units.ToList();
+            List<Unit> units = _unitRepo.GetUnits();
             return View(units);
         }
 
@@ -40,8 +40,7 @@ namespace CallFoward.Controllers
         {
             try
             {
-                _context.Units.Add(unit);
-                _context.SaveChanges();
+                unit = _unitRepo.Create(unit);
             }
             catch
             {
@@ -54,13 +53,13 @@ namespace CallFoward.Controllers
 
         public IActionResult Details (int id)
         {
-            Unit unit = GetUnit(id);
+            Unit unit = _unitRepo.GetUnit(id);
             return View(unit);
         }
 
         private Unit GetUnit(int id)
         {
-            Unit unit = _context.Units.Where(u => u.Id == id).FirstOrDefault();
+            Unit unit = _unitRepo.GetUnit(id);
             return unit;
         }
 
@@ -68,7 +67,7 @@ namespace CallFoward.Controllers
 
         public IActionResult Edit(int id)
         {
-            Unit unit = GetUnit(id);
+            Unit unit = _unitRepo.GetUnit(id);
             return View(unit);
         }
 
@@ -78,9 +77,7 @@ namespace CallFoward.Controllers
         {
             try
             {
-                _context.Units.Attach(unit);
-                _context.Entry(unit).State = EntityState.Modified;
-                _context.SaveChanges();
+                _unitRepo.Edit(unit);
             }
             catch
             {

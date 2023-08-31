@@ -23,9 +23,13 @@
   <ItemGroup>
     <None Remove="Data\" />
     <None Remove="Views\Unit\" />
+    <None Remove="Interfaces\" />
+    <None Remove="Repositories\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
     <Folder Include="Views\Unit\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Repositories\" />
   </ItemGroup>
 </Project>
